@@ -9,6 +9,10 @@ plus the fix for random USB disconnects caused by Home Assistant's audio contain
 
 > ⚠️ ファームウェアの書き換えは自己責任です。Felucca は M-VAVE 公式のものではありません。
 
+> 🤖 **AI にやってもらう**: Claude Code などコマンドを実行できる AI に
+> 「https://github.com/bey-jp/fm1-felucca-pi/blob/main/AI_INSTRUCTIONS.md を読んで、その手順どおりに私の FM-1 に Felucca を入れてください」
+> と頼めば、つなぐ・確認に答える以外は AI がやります → [AI_INSTRUCTIONS.md](AI_INSTRUCTIONS.md)
+
 ## FM-1 のカスタムファームウェア（2026-11 時点）
 
 | 名前 | 種類 | 価格 | 内容 |
