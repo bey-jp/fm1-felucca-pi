@@ -12,6 +12,7 @@ plus the fix for random USB disconnects caused by Home Assistant's audio contain
 > 🤖 **AI にやってもらう**: Claude Code などコマンドを実行できる AI に
 > 「https://github.com/bey-jp/fm1-felucca-pi/blob/main/AI_INSTRUCTIONS.md を読んで、その手順どおりに私の FM-1 に Felucca を入れてください」
 > と頼めば、つなぐ・確認に答える以外は AI がやります → [AI_INSTRUCTIONS.md](AI_INSTRUCTIONS.md)
+> ChatGPT・Gemini などのチャットでも、コマンドを1つずつ案内してもらう形で使えます（実行と結果の貼り付けは自分で）。
 
 ## FM-1 のカスタムファームウェア（2026-11 時点）
 
