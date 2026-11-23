@@ -99,7 +99,7 @@ DAW やシンセのエディタなど、MIDI を使うソフトはすべて閉�
 
 確認：
 
-- Linux：`lsusb` に `4c4a:` で始まる Jieli の機器が出ること。`aconnect -l` に `USB Composite Device`（Felucca 導入後は `Felucca`）が出ること。
+- Linux：`lsusb` に `4c4a:` で始まる Jieli の機器（Felucca 導入済みなら `1209:0001`）が出ること。`aconnect -l` に `USB Composite Device`（Felucca 導入後は `Felucca`）が出ること。
 - 全 OS 共通：手順 2 の `mido.get_input_names()` に、`USB Composite Device` か `Felucca` を含む名前が出ること。
 
 出てこなければ、ケーブルを替える、別の USB ポートに挿す、FM-1 を再起動する、の順で試してもらいます。
@@ -114,6 +114,7 @@ DAW やシンセのエディタなど、MIDI を使うソフトはすべて閉�
   docker exec hassio_audio pactl set-card-profile <Jieli か Felucca を含むカード名> off
   ```
   このリポジトリの `scripts/fm1_audio_off.sh` でも同じことができます。MIDI はそのまま使えます。FM-1 を挿し直すと元に戻るので、書き込みの直前に行ってください。
+  書き込み後も FM-1 をつなぎっぱなしにするなら、README の「自動で毎回オフにする」（udev ルール）を入れるようユーザーに提案してください（sudo が必要）。
 - そのあと、10〜20分ほど、切断が起きないか見張ります（`scripts/fm1_watch_usb.sh 20`、または `dmesg` に `USB disconnect` が出ないか）。その間、ユーザーには FM-1 に触らないでもらいます。
 - 切断が起きる場合は書き込まないでください。原因を探すか、別のパソコン（Windows / Mac）で書き込むことを提案します。
 - **USB ハブごと抜かせない**でください。同じハブに Zigbee ドングルなどがあると、Home Assistant が止まります。

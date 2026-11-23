@@ -7,9 +7,11 @@ MIN=${1:-20}
 path=""
 for d in /sys/bus/usb/devices/*; do
   [ -f "$d/idVendor" ] || continue
-  if [ "$(cat "$d/idVendor")" = "4c4a" ]; then path=$(basename "$d"); break; fi
+  v=$(cat "$d/idVendor"); pr=$(cat "$d/product" 2>/dev/null || true)
+  # 公式ファーム = 4c4a:c755（Jieli）、Felucca = 1209:0001（product "Felucca"）
+  if [ "$v" = "4c4a" ] || { [ "$v" = "1209" ] && [ "$pr" = "Felucca" ]; }; then path=$(basename "$d"); break; fi
 done
-[ -n "$path" ] || { echo "FM-1 (USB ID 4c4a:xxxx) が見つかりません" >&2; exit 1; }
+[ -n "$path" ] || { echo "FM-1 (USB ID 4c4a:xxxx / Felucca 1209:0001) が見つかりません" >&2; exit 1; }
 
 start=$(cut -d' ' -f1 /proc/uptime | cut -d. -f1)
 end=$((start + MIN * 60))

@@ -31,7 +31,7 @@ Felucca を選んだ理由: 無料・オープンソース・更新が活発、�
 
 - SoC: JieLi AC791N / WL82（Dexed 由来の 6 オペレーター FM）
 - USB: クラスコンプライアントの USB MIDI 入出力 + USB オーディオ（2ch / 24bit / 44.1kHz）。Linux はドライバ追加不要
-- `lsusb`: 公式ファームは `4c4a:c755 Jieli Technology USB Composite Device`、Felucca では ALSA 名が `Felucca`
+- `lsusb`: 公式ファームは `4c4a:c755 Jieli Technology USB Composite Device`、Felucca では `1209:0001`（製品名 `Felucca`、ALSA 名も `Felucca`）。Felucca は USB シリアル（ttyACM）も出す
 - Bluetooth は載っているが、Felucca は BLE MIDI 非対応（今後も対応しない方針）
 - Wi-Fi なし
 
@@ -65,6 +65,17 @@ sh scripts/fm1_watch_usb.sh 20   # 20 分見張って切断がないことを確
 ```
 
 音声を止めたら 20 分間一度も切れなくなりました。この設定は FM-1 を挿し直すと元に戻るので、書き込み直前に実行します。
+
+**自動で毎回オフにする（つなぎっぱなしにする場合）**: FM-1 のサウンドカードが現れたら自動で off にする udev ルールと systemd サービスです。
+
+```sh
+sudo cp scripts/fm1_audio_off.sh /usr/local/bin/
+sudo cp system/99-fm1-audio-off.rules /etc/udev/rules.d/
+sudo cp system/fm1-audio-off.service /etc/systemd/system/
+sudo systemctl daemon-reload && sudo udevadm control --reload
+```
+
+Felucca を入れると USB ID が `4c4a:c755`（Jieli）から `1209:0001`（製品名 `Felucca`）に変わるので、ルールは両方に対応しています。
 
 ### 3. 識別情報の確認（書き込みはしない）
 

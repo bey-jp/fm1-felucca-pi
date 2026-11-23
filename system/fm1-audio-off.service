@@ -1,0 +1,7 @@
+[Unit]
+Description=Turn off FM-1 USB audio in Home Assistant PulseAudio (prevents USB disconnects)
+
+[Service]
+Type=oneshot
+# hassio_audio がカードを見つけるまで少し待ち、最大 30 秒リトライ
+ExecStart=/bin/sh -c 'for i in $(seq 1 15); do sleep 2; sh /usr/local/bin/fm1_audio_off.sh && exit 0; done; exit 1'

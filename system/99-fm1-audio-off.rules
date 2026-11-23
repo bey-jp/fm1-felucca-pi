@@ -1,0 +1,4 @@
+# FM-1（公式ファーム / Felucca）のサウンドカードが現れたら、HA の hassio_audio で音声をオフにする。
+# 音声を開きっぱなしにされると FM-1 が数分おきに USB 切断するため（README 参照）。
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", ENV{ID_VENDOR_ID}=="4c4a", ENV{ID_MODEL_ID}=="c755", TAG+="systemd", ENV{SYSTEMD_WANTS}+="fm1-audio-off.service"
+ACTION=="add", SUBSYSTEM=="sound", KERNEL=="controlC*", ENV{ID_VENDOR_ID}=="1209", ENV{ID_MODEL}=="Felucca", TAG+="systemd", ENV{SYSTEMD_WANTS}+="fm1-audio-off.service"
