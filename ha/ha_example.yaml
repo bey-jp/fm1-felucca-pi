@@ -1,0 +1,29 @@
+# configuration.yaml に追記（rest_command: がすでにあれば、その下に fm1_play だけ足す）
+rest_command:
+  fm1_play:
+    url: "http://127.0.0.1:5002/play"     # HA と fm1_server.py が同じ機械（HA コンテナは host ネットワーク）
+    method: POST
+    headers:
+      content-type: "application/json"
+    payload: '{"melody": "{{ melody }}"}'
+    timeout: 5
+
+# automations.yaml に追記：雨センサーが反応したら FM-1 で雨のメロディ
+- id: rain_sensor_fm1_melody
+  alias: 雨センサー_FM-1 雨のメロディ
+  triggers:
+  - trigger: state
+    entity_id: binary_sensor.rain_sensor_moisture   # 自分の雨センサーに書き換える
+    from: 'off'
+    to: 'on'
+  conditions:
+  - condition: time          # 夜中は鳴らさない
+    after: '07:00:00'
+    before: '22:00:00'
+  actions:
+  - action: rest_command.fm1_play
+    data:
+      melody: rain
+  - delay: 01:00:00          # センサーのばたつき対策（1時間に1回まで）
+  mode: single
+  max_exceeded: silent

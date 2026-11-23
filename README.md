@@ -135,6 +135,33 @@ stdbuf -oL aseqdump -p 28:0                         # 受信を表示（パイ�
 amidi -p hw:3,0,0 -S '90 3C 7F'; amidi -p hw:3,0,0 -S '80 3C 00'   # ド を鳴らす
 ```
 
+## Home Assistant から FM-1 を鳴らす（雨のメロディ）
+
+雨センサーが反応したら、FM-1 で「雨のメロディ」を鳴らしています。鳴っている音に合わせて鍵盤の LED も光ります（Felucca は MIDI IN のノートで LED が光る）。
+
+```
+雨センサー ──▶ HA 自動化 ──rest_command──▶ fm1_server.py（127.0.0.1:5002）──USB MIDI──▶ FM-1
+```
+
+| ファイル | 内容 |
+|---|---|
+| `fm1_play.py` | メロディを FM-1 に送る。`python3 fm1_play.py rain`、`--gate` / `--bpm` で長さ・テンポを変更、`--export` で .mid |
+| `fm1_server.py` | HA から呼ぶ HTTP サーバー。`POST /play {"melody":"rain"}`（202 開始 / 409 再生中 / 503 FM-1 なし）、`GET /status` |
+| `melodies/melodies.json` | メロディ（`[音名, 拍, 強さ]` の列）。rain（雨・サラサラ版）と morning（朝のアラーム） |
+| `melodies/*.wav` | 試聴用（簡易 FM 合成。実機とは音色が違う）。`render_wav.py` で作り直せる |
+| `system/fm1-server.service` | systemd 用（パスとユーザーは自分の環境に合わせる） |
+| `ha/ha_example.yaml` | HA の rest_command と自動化の例 |
+
+```sh
+sudo mkdir -p /opt/fm1-felucca-pi && sudo cp -r fm1_play.py fm1_server.py melodies /opt/fm1-felucca-pi/
+sudo cp system/fm1-server.service /etc/systemd/system/   # User= と パスを確認
+sudo systemctl daemon-reload && sudo systemctl enable --now fm1-server
+curl http://127.0.0.1:5002/status
+```
+
+- LED: 1音が短すぎる（0.1 秒以下）と LED はちらつく程度にしか見えない。rain は 60bpm・gate 0.95 にした
+- 雨のメロディと朝のアラームはオリジナル曲です（このリポジトリの LICENSE に従って使えます）
+
 ## English summary
 
 - Felucca ships a terminal installer (`tools/fm1_install.py`) that flashes over USB-MIDI SysEx, so no browser is needed. It worked from a Raspberry Pi 5: `python3 -P fm1_install.py felucca-1.8.3.fwsc --port "USB Composite"`.

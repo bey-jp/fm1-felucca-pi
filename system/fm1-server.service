@@ -1,0 +1,15 @@
+[Unit]
+Description=FM-1 melody server for Home Assistant (127.0.0.1:5002)
+After=network.target sound.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/opt/fm1-felucca-pi
+Environment="PYTHONUNBUFFERED=1"
+ExecStart=/usr/bin/python3 -P /opt/fm1-felucca-pi/fm1_server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
